@@ -1,67 +1,91 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class Ahorcado {
-    public static void main(String[] args) throws Exception {
-        // Clase scanner que nos permite que el usuario escriba
+    public static void main(String[] args) {
+
+        // Crea un objeto scanner para leer la entrada del usuario
         Scanner scanner = new Scanner(System.in);
 
-        // Declaraciones y asignaciones
-        String palabraSecreta = "inteligencia";
-        int intentosMaximos = 15;
-        int intentos = 0;
-        boolean palabraAdivinada = false;
+        // Bucle que se ejecuta mientras el usuario quiera seguir jugando
+        boolean seguirJugando = true;
+        while (seguirJugando) {
 
-        // Arreglos:
-        char[] letrasAdivinadas = new char[palabraSecreta.length()];
+            // Arreglo de palabras posibles para adivinar
+            String[] palabras = { "convicto", "entrometido", "recorrido", "garabato", "rata", "ubre", "infeliz",
+                    "hervir", "caracol", "fichero " };
 
-        // Estructura de control: Iterativa (Bucle)
-        for (int i = 0; i < letrasAdivinadas.length; i++) {
-            letrasAdivinadas[i] = '_';
-            
-        }
+            // Crea un objeto random para seleccionar palabras al azar
+            Random random = new Random();
 
-        // Estructura de control: Iterativa (Bucle)
-        while (!palabraAdivinada && intentos < intentosMaximos) {
-                                                       
-            System.out.println("Palabra a adivinar: " + 
-             // Esto se usa cuando tenemos una palabra de chars
-            String.valueOf(letrasAdivinadas) + " (" + palabraSecreta.length() + " letras)");
+            // Elige una palabra al azar del arreglo como la palabra secreta
+            String palabraSecreta = palabras[random.nextInt(palabras.length)];
 
-            System.out.println("Introduce una letra, por favor");
+            // Crea un arreglo para almacenar las letras adivinadas
+            char[] letrasAdivinadas = new char[palabraSecreta.length()];
 
-            // Usamos la clase scanner para pedir una letra
-            char letra = Character.toLowerCase(scanner.next().charAt(0));
+            // establece el numero de intentos que tiene el jugador
+            int intentos = 5;
 
-            boolean letraCorrecta = false;
+            // Una bandera para controlar el flujo del juego
+            boolean juegoTerminado = false;
 
-            // Estructura de control: Iterativa (Bucle)
-            for (int i = 0; i < palabraSecreta.length(); i++) {
-                // Estructura de control condicional
-                if (palabraSecreta.charAt(i) == letra) {
-                    letrasAdivinadas[i] = letra;
-                    letraCorrecta = true;
+            // Bucle qiue muestra la cantidad de letras que lleva la palabra secreta
+            for (int i = 0; i < letrasAdivinadas.length; i++) {
+                letrasAdivinadas[i] = '_';
+            }
+
+            // Bucle que se ejecuta mientras el juego no haya terminado
+            while (!juegoTerminado) {
+                // Muestra el estado actual de la palabra adivinar
+                System.out.println("Palabra a adivinar: " + String.valueOf(letrasAdivinadas) + " (" + palabraSecreta.length() + " letras)");
+                // Pide al usuario que ingrese una letra y la lee
+                System.out.println("Ingresa una letra: ");
+                char letra = scanner.next().charAt(0);
+
+                // Bandera para verificar si la letra esta en la palabra secreta
+                boolean letraCorrecta = false;
+                // Verifica si la letra esta en la palabra secreta y actualiza el arreglo de
+                // letras adivinadas
+                for (int i = 0; i < palabraSecreta.length(); i++) {
+                    if (palabraSecreta.charAt(i) == letra) {
+                        letrasAdivinadas[i] = letra;
+                        letraCorrecta = true;
+                    }
                 }
+
+                // Si la letra no esta, resta un intento y muestra los intentos restantes
+                if (!letraCorrecta) {
+                    intentos--;
+                    System.out.println("Letra Incorrecta. Intentos restantes: " + intentos);
+                }
+
+                // Si los intentos llegan a cero, muestra "Game Over" y revela la palabra
+                // secreta
+                if (intentos == 0) {
+                    System.out.println("Game Over. La palabra secreta era: " + palabraSecreta);
+                    juegoTerminado = true;
+                }
+
+                // Si se adivina la palabra, muestra un mensaje de felicitacion
+                else if (String.valueOf(letrasAdivinadas).equals(palabraSecreta)) {
+                    System.out.println("¡Felicidades! Descubriste la palabra secreta: " + palabraSecreta);
+                    juegoTerminado = true;
+                }
+
             }
 
-            if (!letraCorrecta) {
-                intentos++;
-                System.out.println("¡Incorrecto! Te quedan " + (intentosMaximos - intentos) + " intentos.");
+            // Pregunta al usuario si quiere seguir jugando
+            System.out.println("¿Quieres seguir jugando? (s/n)");
+            String respuesta = scanner.next();
+            if (respuesta.equalsIgnoreCase("n")) {
+                seguirJugando = false;
+                System.out.println("¡Hasta Luego!");
             }
 
-            if (String.valueOf(letrasAdivinadas).equals(palabraSecreta)) {
-                palabraAdivinada = true;
-                System.out.println("¡Felicidades! has adivinado la palabra secreta: " + palabraSecreta);
-            }
-           
         }
-
-        
-
-        if (!palabraAdivinada) {
-            System.out.println("¡Que pena te has quedado sin intentos! GAME OVER");
-        }
-
         scanner.close();
-     
+
     }
+
 }
